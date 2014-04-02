@@ -5,7 +5,7 @@
     "Evgeniy Kazakov <evgeniy.kazakov@gmail.com>"
   ],
   "license": "MIT",
-  "private": true,
+  "private": false,
   "ignore": [
     "**/.*",
     "node_modules",
