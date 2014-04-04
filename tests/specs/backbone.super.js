@@ -38,6 +38,46 @@ define(function(require) {
                 spy3.should.have.been.calledOnce;
             });
         });
+
+        describe("Super method call", function () {
+            it("Should call parent method", function () {
+                var attrs = { x: 1 };
+                var opts  = { opt: 2 };
+                var spy   = sinon.spy(Backbone.Model.prototype, "initialize");
+                var Model = Backbone.Model.extend({
+                    initialize: function (attrs, options) {
+                        this._super(attrs, options);
+                    },
+                });
+
+                new Model(attrs, opts);
+                spy.should.have.been.calledOnce;
+                spy.should.have.been.calledWith(attrs, opts);
+            });
+        });
+
+        it("Should call parent method in long hierarchy", function () {
+            var Model = Backbone.Model.extend({
+                foo: function () {
+                    return this.get("x");
+                },
+            });
+
+            var SubModel = Model.extend({
+                foo: function () {
+                    return this._super() + 1;
+                },
+            });
+
+            var SubSubModel = SubModel.extend({
+                foo: function () {
+                    return this._super() + 1;
+                },
+            });
+
+            var m = new SubSubModel({ x: 1 });
+            expect(m.foo()).to.be.equal(3);
+        });
     });
 
     function createSubclass (type) {
